@@ -29,6 +29,19 @@ match, it produces far fewer false positives than grep-based XSS checks.
 | Output | JSON / HTML / TXT reports |
 | License | MIT |
 
+## Roadmap
+
+- [x] Reflected XSS detection
+- [x] DOM XSS browser verification
+- [x] Custom payload support
+- [x] JSON/HTML reports
+
+Future:
+- [ ] Blind XSS support
+- [ ] Burp Suite integration
+- [ ] Better DOM sink analysis
+- [ ] API mode
+
 ## Features
 
 - **Real execution confirmation** — headless Chrome + Selenium, not a
