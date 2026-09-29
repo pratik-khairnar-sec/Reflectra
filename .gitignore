@@ -1,31 +1,9 @@
-# Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.egg-info/
-.eggs/
-build/
-dist/
-
-# Virtual environments
-venv/
+*.pyc
 .venv/
-env/
-ENV/
-
-# Reports / scan output
-*.html
-!README*.html
-report*.json
-report*.txt
+venv/
+*.egg-info/
+reports/
 *.log
-
-# WebDriver cache
-.wdm/
-
-# OS / editor
-.DS_Store
-Thumbs.db
-.idea/
-.vscode/
-*.swp
+.reflectra/
+reflectra_report.html
