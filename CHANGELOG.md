@@ -51,7 +51,7 @@ Builds on v2.0.0's architecture without touching the detection core (`browser.py
 
 ## v2.0.0 — Reflectra (initial architecture)
 
-Renamed from Vaelion-XSS, restructured from one ~600-line script into a package. `reflectra/browser.py` is the preserved v1 detection core — not reimplemented — with every other module built additively around it.
+Renamed from Reflectra-XSS, restructured from one ~600-line script into a package. `reflectra/browser.py` is the preserved v1 detection core — not reimplemented — with every other module built additively around it.
 
 ### Added
 - `reflectra/browser.py`: original v1 `DriverPool` and `_check_injection` confirmation logic, restructured into `BrowserConfirmationEngine`, preserved as the detection core — not reimplemented.
@@ -66,7 +66,7 @@ Renamed from Vaelion-XSS, restructured from one ~600-line script into a package.
 - `tests/fixtures/fixture_server.py`: dependent-free local vulnerable test app with deterministic HTML/attribute/script/DOM-only/escaped reflection cases, for testing without relying on a third-party target.
 
 ### Changed
-- Project renamed Vaelion-XSS → Reflectra; restructured from one ~600-line script into a package. `browser.py` is the preserved detection core; every other module is additive orchestration around it.
+- Project renamed Reflectra-XSS → Reflectra; restructured from one ~600-line script into a package. `browser.py` is the preserved detection core; every other module is additive orchestration around it.
 - Report schema now distinguishes `CONFIRMED_XSS` from `SINK_REACHABLE_LEAD` from `BLIND_INJECTION` from `ERROR` — previously v1 only had implicit "vulnerable" vs. "not vulnerable, or errored" states, with errors under-visible in the summary.
 
 ### Improved
@@ -82,9 +82,9 @@ Renamed from Vaelion-XSS, restructured from one ~600-line script into a package.
 - No CSP-awareness, no WAF/rate-limit backoff (see README Roadmap).
 - Context classifier is heuristic; `AMBIGUOUS`/misclassification always falls back to full coverage rather than being resolved more precisely.
 
-## v1.0.0 — Vaelion-XSS (original)
+## v1.0.0 — Reflectra-XSS (original)
 
-Single-file scanner (`vaelion_xss.py`, preserved unmodified as `legacy_vaelion_xss.py`):
+Single-file scanner (`reflectra_xss.py`, preserved unmodified as `legacy_reflectra_xss.py`):
 - Selenium + headless Chrome, `DriverPool` for driver reuse across threads
 - Injects every payload into every query/fragment parameter of every target (exhaustive, O(targets × payloads))
 - Confirms via native JS dialog (`alert`/`confirm`/`prompt`) detection

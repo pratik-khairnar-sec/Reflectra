@@ -1,10 +1,10 @@
 """
 reflectra.browser
 --------------------
-THIS MODULE IS THE ORIGINAL VAELION-XSS DETECTION CORE.
+THIS MODULE IS THE ORIGINAL pratik-XSS DETECTION CORE.
 
 DriverPool and the per-payload confirmation routine below are carried over
-from legacy_vaelion_xss.py's DriverPool and XSSScanner._check_injection
+from legacy_reflectra_xss.py's DriverPool and XSSScanner._check_injection
 almost line-for-line. This is intentional: that code was tested and
 working, and the whole point of Reflectra's optimization layer is to feed
 this engine a smaller, better-prioritized task list -- not to replace it.
@@ -57,7 +57,7 @@ VERSION = "7.0.0"
 
 
 # --------------------------------------------------------------------------- #
-# Driver pool -- unchanged from legacy_vaelion_xss.DriverPool, plus optional
+# Driver pool -- unchanged from legacy_reflectra_xss.DriverPool, plus optional
 # cookie seeding for authenticated scans.
 # --------------------------------------------------------------------------- #
 
@@ -155,7 +155,7 @@ class Task:
 
 class BrowserConfirmationEngine:
     """The original detection core. `confirm_one()` is
-    legacy_vaelion_xss.XSSScanner._check_injection, restructured to operate
+    legacy_reflectra_xss.XSSScanner._check_injection, restructured to operate
     on one (point, payload) Task instead of expanding a single target URL
     into every parameter variant itself -- that expansion now happens once,
     up front, in urltools.injection_points(), shared with the probe phase so

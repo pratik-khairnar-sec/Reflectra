@@ -4,7 +4,7 @@ Reflectra
 =========
 Context-Aware XSS Scanner.
 
-Detection core (browser.py) is the original Vaelion-XSS Selenium/Chrome
+Detection core (browser.py) is the original Reflectra-XSS Selenium/Chrome
 engine, preserved. Everything else in this file is orchestration around
 that core: target/payload loading, the phase-1 reflection probe, the
 fallback-safe payload planner, and reporting.

