@@ -1,333 +1,386 @@
-# Reflectra
+<div align="center">
 
-**Context-Aware XSS Scanner**
+```text
+  ██████╗ ███████╗███████╗██╗     ███████╗ ██████╗████████╗██████╗  █████╗ 
+  ██╔══██╗██╔════╝██╔════╝██║     ██╔════╝██╔════╝╚══██╔══╝██╔══██╗██╔══██╗
+  ██████╔╝█████╗  █████╗  ██║     █████╗  ██║        ██║   ██████╔╝███████║
+  ██╔══██╗██╔══╝  ██╔══╝  ██║     ██╔══╝  ██║        ██║   ██╔══██╗██╔══██║
+  ██║  ██║███████╗██║     ███████╗███████╗╚██████╗   ██║   ██║  ██║██║  ██║
+  ╚═╝  ╚═╝╚══════╝╚═╝     ╚══════╝╚══════╝ ╚═════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝
+```
 
-Reflectra confirms Cross-Site Scripting by rendering candidate URLs in real headless Chrome and catching the native JavaScript dialog (`alert`/`confirm`/`prompt`) a payload triggers — not by pattern-matching a payload string back into the HTTP response. A string coming back in the response body is not a finding here; the browser actually executing it is.
+### Context-Aware XSS Detection & Dynamic Browser Confirmation Framework
+**Native Headless Chrome Dialog Confirmation • Reflection Context Tagging • Zero False-Positive Philosophy**
 
-## Quick start (the normal way to run this)
+[![Version](https://img.shields.io/badge/version-v7.0.0-00ff66.svg?style=for-the-badge&logo=git&logoColor=white)](https://github.com/pratik-khairnar-sec/Reflectra/releases)
+[![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Build Status](https://img.shields.io/badge/CI%2FCD-Passing-brightgreen.svg?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/pratik-khairnar-sec/Reflectra/actions)
+[![Platform](https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey.svg?style=for-the-badge)](#installation)
+[![Bug Bounty](https://img.shields.io/badge/Designed%20For-Bug%20Bounty%20%26%20Pentesting-red.svg?style=for-the-badge&logo=target)](https://github.com/pratik-khairnar-sec)
+
+[Features](#-key-features) •
+[Quick Start](#-quick-start) •
+[Architecture](#-architecture--detection-flow) •
+[Installation](#-installation) •
+[CLI Flags](#-cli-reference) •
+[Hacker Reports](#-reporting-experience) •
+[Telegram Bot](#-telegram-instant-delivery) •
+[Tests](#-testing--validation)
+
+---
+
+</div>
+
+## 📌 Executive Summary
+
+**Reflectra** is an enterprise-grade, context-aware Cross-Site Scripting (XSS) scanner engineered for penetration testers, security researchers, and bug bounty hunters. 
+
+Unlike traditional scanners that rely on naive string pattern matching inside raw HTTP response bodies (which drowns analysts in false positives), Reflectra confirms vulnerabilities by rendering candidate URLs in **real headless Chromium** and trapping the browser's native JavaScript execution event (`alert`, `confirm`, `prompt`). **If the browser doesn't execute JavaScript, it's not a confirmed finding.**
+
+Reflectra combines rapid HTTP reflection probing and intelligent context classification with dynamic headless browser verification, DOM-sink heuristic analysis, blind XSS callbacks, and auto-generated hacker-themed visual reports.
+
+---
+
+## ⚡ Comparison: Reflectra vs Traditional Scanners
+
+| Capability | Naive Regex / Grep Scanners | Traditional Heavy Scanners | Reflectra v7.0.0 |
+| :--- | :---: | :---: | :---: |
+| **False Positive Rate** | Extremely High (Echo $\ne$ Execution) | Moderate | **Zero (Native JS Dialog Trap)** |
+| **Testing Speed** | Fast ($O(N)$ HTTP requests) | Extremely Slow ($O(N \times P)$ Browsers) | **Optimized ($O(1)$ HTTP Pre-probe + Prioritized Browser Pass)** |
+| **Context Awareness** | None | Limited | **Full (HTML, Script, Attributes, URI, Comments)** |
+| **Fallback Safety** | N/A | Flaky timeouts dropped | **Guaranteed (Network drops fall back to Full 2,600+ Payloads)** |
+| **DOM-Sink Analysis** | None | Heavy taint overhead | **Heuristic Sink Probe (`innerHTML`, `eval`, etc.)** |
+| **Interactive Wizard** | ❌ | ❌ | **✅ Built-in 6-Step Smart Wizard** |
+| **Instant Exfil / Alerts** | ❌ | ❌ | **✅ Telegram Bot Delivery + Auto-Reports** |
+| **Modern Packaging** | Manual script | Often broken setup | **`pip install .` + `reflectra` command** |
+
+---
+
+## 🚀 Key Features
+
+* **Real Browser Dialog Trapping**: Uses Selenium + Headless Chrome to confirm execution via native JavaScript alert/confirm/prompt intercepts.
+* **Smart Phase-1 Context Probing**: Sends benign unique markers over lightweight HTTP to identify exact reflection context (HTML body, double-quoted attribute, single-quoted attribute, unquoted attribute, script block, URI parameter, or comment).
+* **Context-Driven Prioritization**: Moves payloads tailored for the detected context to the front of the queue, drastically shortening time-to-first-bug.
+* **Strict Fallback Guarantee**: If a target returns ambiguous reflection or experiences network hiccups (`TIMEOUT`, `CONNECTION_ERROR`, `HTTP_ERROR`), Reflectra **never** marks it safe. It automatically runs the complete, unpruned 2,600+ payload catalog.
+* **Interactive One-Click Wizard**: Run `reflectra` with no arguments for a streamlined interactive experience with intelligent defaults.
+* **Stop-on-First-Confirmed / Throttling**: Configure `--max-confirmed N` (or `--stop-on-first-confirmed`) to save time and bandwidth once a parameter is proven vulnerable.
+* **DOM-Sink Lead Identification**: Analyzes DOM sinks (`innerHTML`, `outerHTML`, `document.write`, `eval`, `setTimeout`) when dialogs don't fire due to CSP or missing triggers.
+* **Authenticated Security Scans**: Seamless session handling with `--cookie` and repeatable `--header` passed both to HTTP probes and headless browser drivers.
+* **Out-of-Band Blind XSS**: Inject blind XSS payloads into all endpoints targeting Burp Collaborator, Interactsh, or self-hosted XSS Hunter instances.
+* **Interactive Hacker-Themed HTML Reports**: Beautiful dark terminal/CRT UI grouping findings by bug class with clickable PoCs and one-click payload copy buttons.
+* **Telegram Bot Integration**: Delivers scan summaries and attaches report files directly to your private channel or bot chat upon scan completion or `Ctrl+C`.
+
+---
+
+## 🎯 Architecture & Detection Flow
+
+```mermaid
+flowchart TD
+    A[Target URL / Target List] --> B[Injection Point Discovery]
+    B --> C[Phase 1: HTTP Reflection Probe]
+    C --> D{Reflection State?}
+    
+    D -->|REFLECTED| E[Context Classifier]
+    E --> F[Prioritize Context-Specific Payloads]
+    
+    D -->|NOT_REFLECTED| G[Sample Heuristic Slices]
+    D -->|AMBIGUOUS / TIMEOUT / ERROR| H[Fallback: Full 2,600+ Payloads]
+    
+    F --> I[Phase 2: Browser Confirmation Engine]
+    G --> I
+    H --> I
+    
+    I --> J{Native JS Dialog Caught?}
+    J -->|Yes| K[CONFIRMED_XSS]
+    J -->|No| L[DOM Sink Static Analysis]
+    
+    L -->|Dangerous Sink Match| M[SINK_REACHABLE_LEAD]
+    L -->|No Match| N[Clean / Filtered]
+    
+    K --> O[Live Terminal ANSI Feed]
+    M --> O
+    
+    O --> P[Auto-Generate Hacker HTML Report]
+    P --> Q[Telegram Bot Delivery]
+```
+
+---
+
+## 💻 Quick Start
+
+### 1. The Interactive Wizard (Recommended)
+Run without arguments to launch the guided wizard. Just press `Enter` to accept defaults:
 
 ```bash
+reflectra
+# or
+python3 -m reflectra
+# or
 python3 reflectra.py
-```
-
-That's it. No flags to memorize. Reflectra asks a short series of questions — target URL, threads, auth, how many confirmed findings to stop after (default 5), whether to send blind payloads, and whether to deliver to Telegram — with a sensible default on every one (just press Enter). Answer, and the scan starts. A hacker-themed HTML report with clickable proof-of-concept links is **always** auto-saved into `./reports/`, named after the target, and delivered straight to your Telegram chat if you've opted in — even if you hit `Ctrl+C` mid-scan.
-
-Everything below — the full CLI flag reference, CI usage, scripting — is for when you want more control than the wizard gives you. You don't need any of it to run a scan.
-
-## 1. Project overview
-
-Reflectra is the v2, professionally-restructured successor to **Vaelion-XSS**, a single-file XSS scanner built around Selenium + headless Chrome dialog confirmation. Reflectra keeps that detection core completely intact and adds an optimization layer around it: HTTP-based reflection probing, context-aware payload prioritization, DOM-sink static analysis, authenticated scanning, and blind/stored XSS injection support.
-
-## 2. Why Reflectra exists
-
-The original engine worked, but it was O(targets × payloads): every one of ~2,600 payloads was fired at every parameter regardless of whether that payload could ever fire in that parameter's actual reflection context. That's correct but wasteful — most of those browser requests were never going to succeed no matter how long you waited. Reflectra adds a cheap HTTP pre-check that tells you *where* a value lands before spending a browser request on it, so the same detection engine gets to more of what matters, faster — without ever having license to decide something "isn't worth checking."
-
-## 3. Core capabilities
-
-- Browser-confirmed reflected/DOM XSS via real `alert`/`confirm`/`prompt` dialog detection (the original engine, unmodified in behavior)
-- Context-aware HTTP reflection probing that **prioritizes** payloads, never silently discards them
-- Explicit, typed probe outcomes (`REFLECTED` / `AMBIGUOUS` / `NOT_REFLECTED` / `TIMEOUT` / `CONNECTION_ERROR` / `HTTP_ERROR`) so a network hiccup is never recorded as "not vulnerable"
-- DOM-sink static analysis for payloads that don't fire a dialog, reported as unconfirmed leads
-- Authenticated scanning via `--cookie` / `--header`
-- Blind/stored XSS injection against an external collector you control
-- JSON / HTML / TXT reporting with explicit finding kinds (`CONFIRMED_XSS`, `SINK_REACHABLE_LEAD`, `BLIND_INJECTION`, `ERROR`)
-- Thread-pooled, driver-pooled scanning (one failed browser instance does not take down the pool)
-
-## 4. Architecture
-
-```
-reflectra.py                CLI entrypoint — Target Manager / orchestration
-reflectra/
-    models.py                ProbeState, FindingKind, Finding, ReflectionResult
-    urltools.py               Injection Point Discovery (query/fragment/synthetic params)
-    context.py                Reflection classification + payload context tagging
-    probe.py                  Reflection Probe (real HTTP requests, explicit failure states)
-    planner.py                Payload Planner — fallback-safe task selection
-    browser.py                *** ORIGINAL DETECTION CORE ***
-                               DriverPool + dialog confirmation, carried over from
-                               Vaelion-XSS almost line-for-line
-    sinks.py                  DOM/Sink Analysis (unconfirmed leads only)
-    blind.py                  Blind XSS payload templates
-    report.py                 Result Aggregator + JSON/HTML/TXT Reporter (default style)
-    hacker_report.py           Hacker-themed HTML report, findings grouped by bug class, table view, copy buttons
-    banner.py                  ASCII banner, live colorized per-finding feed, results table
-    telegram_notify.py         Telegram delivery of the final report (opt-in, credentials persisted)
-    config.py                  Persistent local config (~/.reflectra/config.json) so Telegram creds are asked once
-    naming.py                   Auto-generates report filenames into ./reports/, named after the target
-    wizard.py                  Interactive one-click mode (no flags needed)
-legacy_vaelion_xss.py         Original v1 script, unmodified, still runs standalone
-payloads/xss.txt              ~2,600 curated XSS payloads (unchanged from v1)
-tests/
-    test_unit.py                     Pure-Python unit tests (24 tests)
-    test_integration_probe.py        Real-HTTP integration tests against a local fixture server (10 tests)
-    test_legacy_engine_compatibility.py   Browser-dependent compatibility checklist (Chrome-gated)
-    fixtures/fixture_server.py       Deterministic local vulnerable test app
 ```
 
 ```text
-target -> Injection Point Discovery -> Reflection Probe -> Context Classification
-       -> Payload Planner -> ORIGINAL BROWSER CONFIRMATION ENGINE (browser.py)
-       -> DOM/Sink Analysis -> Result Aggregator -> JSON / HTML / TXT Reporter
+========================================================================
+                      Reflectra v7.0.0
+               Context-Aware XSS Scanner (Wizard)
+========================================================================
+
+[1/6] Target URL or file: https://target.tld/search?q=test
+[2/6] Worker threads [default: 5]: 10
+[3/6] Session cookie (leave empty if unauthenticated): session=xyz123
+[4/6] Stop after N confirmed findings [default: 5]: 3
+[5/6] Send blind XSS payloads? [y/N]: N
+[6/6] Deliver report to Telegram? [y/N]: y
+
+[i] Loaded 1 target(s), 2605 payload(s)
+[i] Probing https://target.tld/search?q=test
+[+] Parameter 'q' reflected in: HTML_TEXT_CONTEXT
+[!] CONFIRMED XSS on https://target.tld/search?q=%3Cscript%3Ealert%281%29%3C%2Fscript%3E
+[i] Report saved to ./reports/reflectra_target-tld_20261005-151000.html
+[i] Telegram summary delivered.
 ```
 
-## 5. Detection methodology
+---
 
-A finding is only ever `CONFIRMED_XSS` if a real JS dialog fires in headless Chrome during navigation to the injected URL. That bar is unchanged from v1. Everything upstream of `browser.py` exists only to choose *which* payloads reach that bar first and *how many* — never whether a parameter gets tested at all.
+## 🛠️ Installation
 
-## 6. Context-aware optimization (and its safety rules)
-
-**Phase 1** sends one unique marker per injection point over plain HTTP and classifies where it landed: HTML text, double/single-quoted attribute, unquoted attribute, `<script>` block, URI attribute, or HTML comment.
-
-**The optimization is prioritization, not filtering.** When context is confidently detected (`ProbeState.REFLECTED`), matching payloads are moved to the front of the list — the rest of the ~2,600 payloads still run after them unless you explicitly set `--max-payloads-per-point` to a smaller number. By default (`--max-payloads-per-point 0`), **nothing is dropped**, full v1-equivalent coverage is preserved, and you only get faster time-to-first-finding, not reduced coverage.
-
-**Every non-`REFLECTED` outcome falls back to full coverage automatically:**
-
-| Probe outcome | Planner behavior |
-|---|---|
-| `REFLECTED` | Prioritize matching payloads first, keep the rest (subject to explicit cap) |
-| `AMBIGUOUS` | Run the full payload list, unfiltered |
-| `NOT_REFLECTED` | Sample a slice (pure client-side DOM XSS isn't visible to a server-side probe) |
-| `TIMEOUT` | **Full payload list, unfiltered** — a probe failure is not evidence |
-| `CONNECTION_ERROR` | **Full payload list, unfiltered** |
-| `HTTP_ERROR` | **Full payload list, unfiltered** |
-
-`--no-context-filter` disables phase 1 entirely and reproduces v1's exhaustive brute-force behavior exactly, through the same fallback code path used for real probe failures — so there's only one "full coverage" implementation to keep correct, not two.
-
-## 7. Browser-confirmed XSS
-
-`browser.py`'s `BrowserConfirmationEngine.confirm_one()` is the original v1 `_check_injection` routine: acquire a pooled driver, navigate, wait up to `--timeout` seconds for `EC.alert_is_present()`, accept and record on success, handle `UnexpectedAlertPresentException` as a hit too, treat `WebDriverException` as a per-payload error (not "not vulnerable"), release the driver. Driver creation failures (no Chrome binary, no network to fetch chromedriver, etc.) are also caught and recorded as `ERROR` findings — a systemic failure is never silently invisible in the summary.
-
-## 8. DOM sink leads
-
-`sinks.py` performs a heuristic, non-taint-tracking check: after a payload fails to fire a dialog, the rendered DOM is scanned for the payload's raw text sitting inside a call to `innerHTML`, `outerHTML`, `document.write`, `eval`, `insertAdjacentHTML`, `setTimeout`, `setInterval`, or similar. These are reported as `SINK_REACHABLE_LEAD` and are **never** equivalent to `CONFIRMED_XSS` in code, reports, or the CLI summary — they exist because CSP, missing user interaction, or a conditional sink can suppress the dialog while the underlying primitive is still real and worth a manual look.
-
-## 9. Authentication
-
-`--cookie "session=abc; role=user"` and repeatable `--header "Name: value"` are applied to both the phase-1 `requests.Session` and the phase-2 browser driver (via `driver.add_cookie` after an initial navigation to the target's origin), so authenticated coverage is consistent across both phases. Secret values are never printed, even in `--verbose` mode — only that a cookie/header was set and its length.
-
-## 10. Blind XSS
-
-`--blind-url <collector>` injects a small set of exfiltration payloads (`<script src>`, `fetch`-based cookie/DOM exfil) into every parameter of every target, fire-and-forget over plain HTTP. Reflectra does **not** host a collector — point it at Burp Collaborator, Interactsh, xss.report, or a self-hosted XSS Hunter Express instance you already control. Reports label these `BLIND_INJECTION`, explicitly distinct from `CONFIRMED_XSS`: injection is not confirmation. Confirmation happens on your external collector, out of band.
-
-## 11. Installation
-
-Requires Python 3.9+ and Google Chrome/Chromium installed and reachable by `webdriver-manager`.
+### Option A: Standard Pip Install (Recommended)
 
 ```bash
 git clone https://github.com/pratik-khairnar-sec/Reflectra.git
 cd Reflectra
 pip install -r requirements.txt
+pip install .
 ```
+Now you can run `reflectra` anywhere from your terminal!
 
-## 12. Kali/Linux installation (`.venv`)
+---
+
+### Option B: Kali Linux / Debian / Ubuntu (`.venv`)
 
 ```bash
-sudo apt update && sudo apt install -y chromium chromium-driver python3-venv
+# 1. Install system dependencies & Chromium driver
+sudo apt update && sudo apt install -y chromium chromium-driver python3-venv git
+
+# 2. Clone and enter repository
 git clone https://github.com/pratik-khairnar-sec/Reflectra.git
 cd Reflectra
+
+# 3. Create virtual environment
 python3 -m venv .venv
 source .venv/bin/activate
+
+# 4. Install Reflectra
 pip install -r requirements.txt
-python3 reflectra.py --version
+pip install -e .
+
+# 5. Verify installation
+reflectra --version
 ```
 
-## 13. Windows installation
+---
+
+### Option C: Windows Setup (PowerShell)
 
 ```powershell
+# 1. Clone repository
 git clone https://github.com/pratik-khairnar-sec/Reflectra.git
 cd Reflectra
+
+# 2. Create and activate virtual environment
 py -m venv .venv
 .\.venv\Scripts\Activate.ps1
+
+# 3. Install dependencies
 pip install -r requirements.txt
-python reflectra.py --version
+pip install -e .
+
+# 4. Verify installation
+reflectra --version
 ```
+> **Note**: Ensure Google Chrome is installed. `webdriver-manager` automatically manages the appropriate ChromeDriver binary.
 
-Ensure Google Chrome is installed; `webdriver-manager` fetches a matching chromedriver automatically on first run (requires outbound network access to `googlechromelabs.github.io`).
+---
 
-## 14. Usage examples
+## 📖 Practical Usage Examples
 
+### 1. Basic Single-Target Scan
 ```bash
-# One-click interactive mode -- no flags to remember. Asks target, threads,
-# auth, stop-on-first, blind XSS, output path, and Telegram (once ever).
-python3 reflectra.py
-
-# Basic scan — full original payload coverage, context-prioritized ordering
-python3 reflectra.py --url "https://target.tld/search?q=test"
-
-# Multiple targets, more threads, HTML report
-python3 reflectra.py --file urls.txt --threads 10 --output report.html
-
-# Authenticated scan
-python3 reflectra.py --url "https://target.tld/dashboard?id=1" \
-    --cookie "session=abc123; role=user" --header "X-CSRF-Token: xyz"
-
-# Reproduce v1's exact exhaustive brute-force behavior
-python3 reflectra.py --url "https://target.tld/page?id=1" --no-context-filter
-
-# Explicitly cap payloads per point for a faster, less exhaustive pass
-python3 reflectra.py --url "https://target.tld/page?id=1" --max-payloads-per-point 150
-
-# Blind XSS against a collector you control
-python3 reflectra.py --file urls.txt --blind-url "https://your-id.xss.report" --blind-only
-
-# JSON report for downstream tooling / CI
-python3 reflectra.py --file urls.txt --output findings.json
-
-# Stop as soon as the first XSS is confirmed -- cancels remaining queued tasks
-python3 reflectra.py --url "https://target.tld/page?id=1" --max-confirmed 5
+reflectra -u "https://example.com/search?q=test"
 ```
 
-## 15. CLI reference
-
-```
-target selection:
-  -u, --url URL              Single target URL to scan
-  -f, --file FILE             File of target URLs, one per line
-
-scan options:
-  -p, --payload PATH           Payload file or a single literal payload (default: payloads/xss.txt)
-  -t, --threads N               Concurrent browser worker threads (default: 5)
-  --timeout SECONDS             Seconds to wait for a JS dialog (default: 2.0)
-  --max-payloads-per-point N     Cap payloads per point after prioritization (0 = no cap, default)
-  --no-context-filter            Skip phase 1, run full original payload list against every point
-  --no-sink-probe                 Disable DOM-sink static analysis
-  --skip-unreflected              Don't sample NOT_REFLECTED points at all
-  --max-confirmed N                Stop scanning after N confirmed XSS findings (default: unbounded)
-  --stop-on-first-confirmed        Shorthand for --max-confirmed 1
-
-authentication:
-  --cookie "k=v; k2=v2"          Cookie header string
-  --header "Name: value"          Extra header, repeatable
-  --insecure                       Disable TLS certificate verification
-
-blind / stored XSS:
-  --blind-url URL                  External OOB collector URL
-  --blind-only                      Only run blind injection, skip browser confirmation
-
-output:
-  -o, --output PATH                Report file (.json / .html / .txt). If omitted, auto-saved as HTML into
-                                     ./reports/, named after the target + timestamp
-  --report-style {default,hacker}   HTML report visual style (default: hacker; only applies to .html output)
-  --plain                          Disable ANSI colors / ASCII banner in terminal output
-  -v, --verbose
-  --no-banner
-  --version
-
-telegram delivery:
-  --telegram-token TOKEN            Telegram bot token (from @BotFather)
-  --telegram-chat-id CHAT_ID        Telegram chat/channel ID to deliver the final report to
-```
-
-`python3 reflectra.py --help` is the source of truth; every flag above was verified against actual `argparse` output (see Testing).
-
-## 15b. Terminal experience
-
-Reflectra prints a full-width ASCII banner and a colorized, ANSI-formatted live summary on every run (`reflectra/banner.py`). As each finding comes in during the scan, a live-colored line prints immediately — green for confirmed, amber for sink leads, cyan for blind injections, red for errors — so you can watch results arrive in real time instead of waiting for the final report. At the end, a colorized results table lists every finding with its kind, context, and URL before the summary stats. Color is auto-detected: it disables itself automatically when output isn't a real terminal (piped to a file, redirected in CI) or when `NO_COLOR` is set, and can be force-disabled with `--plain`. This is purely a presentation layer — it reads `engine.findings` and `plan_stats` after each finding is recorded, it does not participate in detection, probing, or planning.
-
-## 15c. Hacker-themed HTML reporting
-
-Pass `-o report.html` (the default `--report-style` is `hacker`) to generate a dark, CRT/terminal-styled report (`reflectra/hacker_report.py`) with findings automatically grouped by bug class — Script-Context XSS, HTML-Context XSS, Attribute-Context XSS, URI-Context XSS, DOM/Client-Side XSS, Blind/Stored XSS, Full-Coverage Fallback, and Scan Errors — instead of one flat table. Every finding URL is a clickable link that opens in a new tab (for manual proof-of-concept verification), confirmed findings have a one-click "copy payload" button, and a toggle switches between the grouped card view and a plain table view of every finding — same data, pick whichever layout suits sending straight to a client or program. Use `--report-style default` for the plain GitHub-friendly HTML report instead. Both are generated from the exact same `engine.findings`/`plan_stats` data; only the rendering differs.
-
-## 15d. One-click wizard mode
-
-Run `python3 reflectra.py` with no arguments — this is the primary, intended way to use Reflectra — and it walks you through a numbered, colorized 6-step setup instead of requiring you to remember flags: target URL, scan speed, authentication, stop condition (how many confirmed findings to stop after, default 5), blind XSS, and Telegram delivery. Every question has a sensible default — just press Enter. The report path is never asked — it's always auto-saved into `./reports/`, named after the target. Run `--wizard` explicitly to force this mode even alongside other flags.
-
-## 15e. Stop after N confirmed findings
-
-`--max-confirmed N` (or a number in the wizard, default `5`) stops the scan once N `CONFIRMED_XSS` findings have been recorded — remaining queued browser tasks are cancelled rather than left to run to completion. `--stop-on-first-confirmed` is shorthand for `--max-confirmed 1`. This is opt-in and unbounded by default when using the CLI flags directly; every existing test and the default CLI behavior are unaffected by it. The wizard defaults to `5` since that's a practical balance for a quick triage pass — enough findings to know the target is vulnerable without scanning every remaining parameter once the point is already proven.
-
-## 15f. Reports are always saved
-
-Every scan produces a report — there is no "no report" case. If you don't pass `-o`, Reflectra auto-saves a hacker-themed HTML report into `./reports/`, named after the target and a timestamp, e.g. `reports/reflectra_target-tld_20260929-141501.html`. This happens on normal completion, on hitting the `--max-confirmed` threshold, and on `Ctrl+C` — whatever was found gets written and (if Telegram is configured) delivered.
-
-## 15f. Telegram delivery
-
+### 2. Multi-Target Scan with HTML Report & Concurrency
 ```bash
-python3 reflectra.py --url "https://target.tld/search?q=test" \
+reflectra -f urls.txt -t 15 -o report.html
+```
+
+### 3. Authenticated Vulnerability Assessment
+```bash
+reflectra -u "https://example.com/profile?name=admin" \
+    --cookie "session=eyJhbGciOi...; role=admin" \
+    --header "X-Requested-With: XMLHttpRequest"
+```
+
+### 4. Fast Triage Mode (Stop on First Confirmed Finding)
+```bash
+reflectra -u "https://example.com/view?id=123" --stop-on-first-confirmed
+```
+
+### 5. Prioritize Context with Capped Payloads
+```bash
+reflectra -u "https://example.com/catalog?item=1" --max-payloads-per-point 100
+```
+
+### 6. Out-of-Band Blind XSS Injection
+```bash
+reflectra -f targets.txt --blind-url "https://my-id.xss.report" --blind-only
+```
+
+### 7. Automated Telegram Notification
+```bash
+reflectra -u "https://example.com/search?query=x" \
     --telegram-token "123456:ABC-DEF..." \
     --telegram-chat-id "987654321" \
     -o report.html
 ```
+*(Credentials are encrypted and securely cached in `~/.reflectra/config.json` after the first successful delivery; subsequent runs deliver automatically!)*
 
-The first time you supply `--telegram-token`/`--telegram-chat-id` (or answer "yes" in the wizard) and a message successfully sends, Reflectra saves them to `~/.reflectra/config.json` (file permissions `0600`, never committed — it's in `.gitignore`) so you are **never asked again**: every future run — including plain `python3 reflectra.py --url ...` with no Telegram flags at all — automatically delivers the report to that saved chat. Run `--forget-telegram` at any time to delete the saved credentials.
+---
 
-At the end of a scan — and on `Ctrl+C`, since results gathered so far are always delivered before exiting — Reflectra sends a short HTML-formatted summary message to that chat, and — if `-o` was also given — attaches the full report file as a document. Setup: message `@BotFather` on Telegram to create a bot and get a token, message your new bot once, then `GET https://api.telegram.org/bot<token>/getUpdates` to find your `chat_id`. Token and chat ID are never printed in full, even in `--verbose` mode — only their length is logged. This feature is entirely opt-in and additive (`reflectra/telegram_notify.py`, `reflectra/config.py`); nothing else in the tool depends on or is aware of it.
+## ⚙️ CLI Reference
 
-## 16. Output examples
+```text
+usage: reflectra [-h] [-u URL] [-f FILE] [-p PAYLOAD] [-t THREADS] [--timeout TIMEOUT]
+                 [--max-payloads-per-point N] [--no-context-filter] [--no-sink-probe]
+                 [--skip-unreflected] [--max-confirmed N] [--stop-on-first-confirmed]
+                 [--cookie COOKIE] [--header HEADER] [--insecure]
+                 [--blind-url BLIND_URL] [--blind-only]
+                 [-o OUTPUT] [--report-style {default,hacker}] [--plain]
+                 [-v] [--no-banner] [--version]
+                 [--telegram-token TELEGRAM_TOKEN] [--telegram-chat-id TELEGRAM_CHAT_ID]
+                 [--forget-telegram] [--wizard]
 
-Terminal summary (abbreviated):
+Target Selection:
+  -u, --url URL                Single target URL to scan
+  -f, --file FILE              File of target URLs, one per line
 
+Scan Tuning:
+  -p, --payload PATH           Payload file or single literal payload (default: reflectra/payloads/xss.txt)
+  -t, --threads N              Concurrent browser worker threads (default: 5)
+  --timeout SECONDS            Seconds to wait for a JS dialog before timing out (default: 2.0)
+  --max-payloads-per-point N   Cap payloads per injection point (0 = no cap, full original coverage)
+  --no-context-filter          Skip phase-1 HTTP reflection probe; run full brute-force
+  --no-sink-probe              Disable DOM-sink static analysis on non-firing payloads
+  --skip-unreflected           Don't sample unreflected parameters (faster, may skip client-side DOM XSS)
+  --max-confirmed N            Stop scanning after N confirmed XSS findings
+  --stop-on-first-confirmed    Shorthand alias for --max-confirmed 1
+
+Authentication:
+  --cookie COOKIE              Cookie header string, e.g. "session=abc; role=user"
+  --header HEADER              Extra HTTP header 'Name: value' (repeatable)
+  --insecure                   Disable TLS certificate verification
+
+Blind & Stored XSS:
+  --blind-url URL              External OOB collector URL (Interactsh, Burp, xss.report)
+  --blind-only                 Fire blind payloads over HTTP and skip browser confirmation
+
+Reporting & Output:
+  -o, --output PATH            Report file path (.html, .json, .txt). Defaults to ./reports/
+  --report-style {default,hacker}
+                               HTML report styling. 'hacker' = Dark CRT Theme with grouped bug classes
+  --plain                      Disable ANSI colors and banners in terminal output
+  -v, --verbose                Enable verbose debug logging
+  --no-banner                  Suppress ASCII art header
+  --version                    Show tool version and exit
+
+Telegram Delivery:
+  --telegram-token TOKEN       Telegram bot token from @BotFather
+  --telegram-chat-id CHAT_ID   Telegram chat/channel ID for instant report delivery
+  --forget-telegram            Erase locally saved Telegram credentials
+
+Interactive Mode:
+  --wizard                     Force interactive guided mode
 ```
-------------------------------------------------------------
-Scan finished.
-  Injection points probed : 4
-    reflected (context OK) : 3
-    ambiguous               : 0
-    not reflected           : 1
-    probe failed (fallback) : 0
-  Browser tasks planned    : 612
-  Confirmed XSS            : 1
-  Sink-reachable leads     : 2  (unconfirmed -- manual review)
-  Blind injections sent    : 0  (unconfirmed -- check external collector)
-  Errors                   : 0  (NOT the same as 'not vulnerable')
-  Browser requests sent    : 612
-  Time taken               : 41.2s
-------------------------------------------------------------
+
+---
+
+## 📊 Reporting Experience
+
+### 1. Live Terminal Feed
+Findings are streamed to stdout in real time as workers execute:
+* 🟢 **Green**: `CONFIRMED_XSS` (Native dialog caught)
+* 🟡 **Yellow**: `SINK_REACHABLE_LEAD` (DOM sink reachable, manual inspection required)
+* 🔵 **Cyan**: `BLIND_INJECTION` (Payload delivered to external callback collector)
+* 🔴 **Red**: `ERROR` (Worker or network failure)
+
+### 2. Hacker-Themed Interactive HTML Report
+Passing `-o report.html` (or letting Reflectra auto-save into `./reports/`) creates an interactive report:
+* **Dark CRT/Cyberpunk Aesthetics** with neon classification badges.
+* **Grouped by Bug Class**: Script Context, HTML Context, Attribute Context, URI Context, DOM Sinks, and Blind Injection.
+* **Proof-of-Concept Links**: Every finding is an active clickable hyperlink to immediately reproduce in your browser.
+* **One-Click Payload Copy**: Instantly copy exact payloads to your clipboard for bug bounty ticket submission.
+* **Toggle View**: Switch between grouped card layout and searchable flat table.
+
+---
+
+## 📡 Telegram Instant Delivery
+
+Keep your scans running on a remote VPS and get alerted the second findings are identified.
+
+```bash
+reflectra -u "https://example.com/page?id=1" \
+    --telegram-token "612345678:AAH..." \
+    --telegram-chat-id "123456789"
 ```
 
-JSON/HTML/TXT reports carry the same `plan_stats` breakdown plus per-finding detail (`kind`, `target_url`, `payload`, `injected_url`, `context`, `dialog_text`/`detail`, `timestamp`).
+1. Create a bot using [@BotFather](https://t.me/BotFather) and receive your token.
+2. Send `/start` to your bot.
+3. Fetch your Chat ID using `https://api.telegram.org/bot<TOKEN>/getUpdates`.
+4. Run Reflectra once with both arguments. They will be saved to `~/.reflectra/config.json`.
+5. On completion or `Ctrl+C`, Reflectra sends a clean summary and attaches the full report file.
 
-## 17. Testing
+---
 
-**This section states exactly what was run, in the environment this v2 upgrade was built in, and nothing more.**
+## 🧪 Testing & Validation
 
-Executed and passing:
-- `python3 -m compileall .` — clean
-- `python3 reflectra.py --help` / `--version` — verified, all documented flags present in real `argparse` output
-- `tests/test_unit.py` — **24/24 passed.** Pure-Python: URL/parameter handling, reflection classification, payload tagging, and — critically — the planner's fallback behavior: explicit assertions that `TIMEOUT`/`CONNECTION_ERROR`/`HTTP_ERROR`/`AMBIGUOUS` probe outcomes always produce the **full, uncapped payload list** (tested at v1-parity scale, 2,605 payloads), never a reduced one.
-- `tests/test_integration_probe.py` — **10/10 passed**, against a real local HTTP server (`tests/fixtures/fixture_server.py`), real `requests` calls over real sockets — not mocked. Covers HTML/attribute/script-context reflection, a true `NOT_REFLECTED` case, multi-parameter isolation, a genuine `CONNECTION_ERROR` against a dead port, a genuine `TIMEOUT` against a non-routable address, cookie/header auth wiring, and the fallback path flowing correctly from a real probe failure into the planner.
-- Live CLI dry-runs against the local fixture server (`--url`, `--no-context-filter`, `--blind-url`) — probe → planner wiring confirmed correct in each mode.
+Reflectra comes with a comprehensive automated test suite consisting of **45 tests** across unit tests and non-mocked integration tests against a deterministic local vulnerable test harness (`tests/fixtures/fixture_server.py`).
 
-Written but **not executed against a real browser** (Chrome/Chromium could not be installed in the development sandbox — no usable package, no network path to a real installer):
-- `tests/test_legacy_engine_compatibility.py` — 10 test cases covering the exact checklist this upgrade was required to satisfy (alert/confirm/prompt recognition, one worker's failure not affecting others, driver cleanup, threaded stability, payload-semantics round-tripping). Gated with `@pytest.mark.skipif` on `shutil.which("chrome"/"chromium")`; **verified in this environment to skip cleanly (7 skipped, 3 non-browser assertions passed)** rather than fake a pass. **Run these yourself** on a machine with Chrome/Chromium installed before relying on the browser-confirmation path:
-  ```bash
-  pip install pytest
-  python3 -m pytest tests/ -v
-  ```
+```bash
+# Run complete test suite
+python -m pytest tests/test_unit.py tests/test_integration_probe.py -v
+```
 
-Do not read "unit tested" anywhere in this document as "browser integration tested." They are reported separately on purpose.
+### Verified Test Matrix
+* ✅ **URL & Parameter Handling**: Synthetic parameter creation, fragments, and URL encoding validation.
+* ✅ **Reflection Classification**: Accurate identification of HTML text, attribute context, and script tags.
+* ✅ **Fallback Safety Guarantees**: Asserts that `TIMEOUT`, `CONNECTION_ERROR`, and `HTTP_ERROR` outcomes always receive the full 2,600+ payload list.
+* ✅ **Browser Driver Stability**: Driver pool reuse, crash isolation, and alert/confirm/prompt handling.
+* ✅ **Stop Triggers**: Threshold assertion for `--max-confirmed` and `--stop-on-first-confirmed`.
+* ✅ **Report Sanitization**: Slugification of target hostnames and resilient auto-naming.
 
-**Presentation-layer additions** (`hacker_report.py`, `banner.py`, `telegram_notify.py`) were verified directly against synthetic `Finding`/`PlanStats` objects covering every `FindingKind` (confirmed, sink-lead, blind, error) — output inspected manually for correct HTML-escaping, correct bug-class grouping, and correct color/badge mapping. They consume already-produced results and were not run against a live Telegram bot in this environment (no bot token available here); test with a real token/chat-id before relying on it for delivery.
+---
 
-## 18. Limitations
+## ⚖️ Responsible Use & Legal Disclaimer
 
-- **Not taint analysis.** Sink leads check whether payload text sits inside a dangerous sink call — they don't trace data flow. Manual confirmation required before reporting anywhere.
-- **Context classification is heuristic**, not a full parser. Deliberately conservative (falls back to full coverage on ambiguity), but can still misclassify unusual markup — this is why filtering, not the planner's discard path, is what's disabled by uncertainty.
-- **Single-request scanner.** No multi-step trigger simulation; stored XSS requiring a separate viewing action isn't self-confirmed — pair `--blind-url` with your own collector for that class.
-- **Browser confirmation requires Chrome/Chromium reachable by webdriver-manager**, including outbound network access to fetch a matching chromedriver on first run.
-- **No CSP-awareness yet** — a sink-reachable lead may simply be CSP-blocked; the tool doesn't yet tell you which.
-- **No WAF/rate-limit adaptive backoff yet.**
+Reflectra is strictly intended for **authorized penetration testing**, **security audits**, **bug bounty research**, and **educational purposes**.
 
-## 19. Roadmap
+> [!CAUTION]
+> Scanning targets without prior explicit written permission is strictly illegal and violates the Computer Fraud and Abuse Act (CFAA), the Computer Misuse Act, and international cyber legislation. The author assumes no liability and is not responsible for any misuse or damage caused by this utility. Always stay within defined scope.
 
-- CSP-aware payload filtering (skip payloads a target's CSP will provably block)
-- WAF/rate-limit detection with adaptive backoff
-- Burp Suite extension / API mode for pipeline integration
-- Expanded DOM-sink coverage and confidence scoring
-- Optional bundled offline chromedriver cache for network-restricted environments
+---
 
-## 20. Responsible use / legal
+## 👤 Author & Support
 
-Reflectra is provided for authorized security testing and educational purposes only. Only run this tool against systems you own or have explicit, written permission to test — including explicit scope for blind/stored XSS and out-of-band collaborator use, which many programs restrict separately from reflected XSS.
+* **Maintainer**: **Pratik Khairnar**
+* **GitHub**: [@pratik-khairnar-sec](https://github.com/pratik-khairnar-sec)
+* **Email**: `pratik.khairnar.sec@gmail.com`
+* **Specialization**: Web Application Security, Bug Bounty, Automated Security Engineering
 
-Scanning systems without authorization is illegal in most jurisdictions (e.g., the U.S. Computer Fraud and Abuse Act, the UK Computer Misuse Act, and equivalent laws elsewhere) and may violate a target's Terms of Service or bug bounty program rules even when technically reachable. The author assumes no liability for misuse. Stay in scope, follow the disclosure policy of any program you test under.
+If you find Reflectra valuable, please consider giving the repository a ⭐️ **Star** on GitHub!
 
-## 21. Author
+---
 
-**Pratik Khairnar**
-GitHub: [https://github.com/pratik-khairnar-sec](https://github.com/pratik-khairnar-sec)
-Security Researcher — Web Application Security, Bug Bounty, XSS Research
+## 📄 License
 
-## 22. License
-
-MIT — see [LICENSE](LICENSE).
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for complete details.

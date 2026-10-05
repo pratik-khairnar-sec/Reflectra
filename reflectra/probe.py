@@ -33,6 +33,7 @@ import requests
 from requests.exceptions import ConnectionError as ReqConnectionError
 from requests.exceptions import RequestException, Timeout
 
+from .browser import VERSION
 from .context import classify_reflection, make_marker
 from .models import ProbeState, ReflectionResult
 from .urltools import ParamPoint, injection_points
@@ -65,7 +66,7 @@ def build_session(cookies: Optional[str], headers: Optional[list[str]], insecure
 
     session.headers.setdefault(
         "User-Agent",
-        "Reflectra/2.0 (+https://github.com/pratik-khairnar-sec/Reflectra; authorized-security-testing)",
+        f"Reflectra/{VERSION} (+https://github.com/pratik-khairnar-sec/Reflectra; authorized-security-testing)",
     )
     return session
 

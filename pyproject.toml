@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reflectra"
+version = "7.0.0"
+description = "Context-Aware XSS Scanner with Browser Dialog Confirmation & DOM-Sink Analysis"
+readme = "README.md"
+authors = [
+    { name = "Pratik Khairnar", email = "pratik.khairnar.sec@gmail.com" }
+]
+license = { text = "MIT" }
+keywords = [
+    "xss",
+    "xss-scanner",
+    "cross-site-scripting",
+    "bugbounty",
+    "pentesting",
+    "security-tools",
+    "selenium",
+    "headless-chrome",
+    "dom-xss",
+    "blind-xss",
+    "web-security"
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Security",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "selenium>=4.15.0",
+    "webdriver-manager>=4.0.0",
+    "requests>=2.31.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/pratik-khairnar-sec/Reflectra"
+Repository = "https://github.com/pratik-khairnar-sec/Reflectra.git"
+Issues = "https://github.com/pratik-khairnar-sec/Reflectra/issues"
+
+[project.scripts]
+reflectra = "reflectra.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["reflectra*"]
+
+[tool.setuptools.package-data]
+"reflectra" = ["payloads/*.txt"]

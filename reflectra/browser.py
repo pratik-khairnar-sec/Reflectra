@@ -53,7 +53,7 @@ from .models import Finding, FindingKind
 from .sinks import find_reachable_sinks
 from .urltools import ParamPoint
 
-VERSION = "2.1.0"
+VERSION = "7.0.0"
 
 
 # --------------------------------------------------------------------------- #

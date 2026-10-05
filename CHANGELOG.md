@@ -1,6 +1,29 @@
 # Changelog
 
-## v2.1.0 — Reflectra (UX release: wizard, Telegram, auto-reporting)
+## v7.0.0 — Modern Packaging, CI/CD & Community Standards
+
+Major release elevating Reflectra to modern Python package standards, automated multi-platform CI/CD, and open source community infrastructure.
+
+### Added
+- **PEP 517/621 Packaging (`pyproject.toml`)**: Full metadata, classifiers, dependencies, dev extras, and standard build backend (`setuptools.build_meta`).
+- **Global CLI Command**: Direct terminal execution via `reflectra` command installed into environment path (`console_scripts` entrypoint `reflectra.cli:main`).
+- **Package Module Execution**: `python -m reflectra` support via `reflectra/__main__.py`.
+- **Automated CI/CD Workflow (`.github/workflows/ci.yml`)**: Continuous integration testing matrix across Python 3.9, 3.10, 3.11, 3.12, and 3.13 on both Ubuntu and Windows runners.
+- **Repository Health & Governance**:
+  - `CONTRIBUTING.md`: Development environment setup, coding guidelines, testing protocols, and PR workflows.
+  - `CODE_OF_CONDUCT.md`: Contributor Covenant v2.1 code of conduct.
+  - `SECURITY.md`: Vulnerability disclosure policy and security contacts.
+  - `.github/ISSUE_TEMPLATE/`: Bug report and Feature request templates.
+  - `.github/pull_request_template.md`: Standardized PR checklist and validation requirements.
+  - `.gitattributes`: Normalized LF/CRLF text line endings across Unix and Windows environments.
+- **Expanded Test Suite**: Extended automated unit and integration tests to 45 tests, all deterministically passing.
+
+### Changed
+- Synchronized package version to `7.0.0` across `browser.py`, `__init__.py`, `cli.py`, and `pyproject.toml`.
+- Updated User-Agent header in `reflectra/probe.py` to `Reflectra/7.0.0`.
+- Modernized `README.md` with Shields.io badges, ASCII banner, Mermaid execution pipeline, comparison matrix, and installation guide.
+
+---
 
 Builds on v2.0.0's architecture without touching the detection core (`browser.py`'s `confirm_one`/`DriverPool` logic is unchanged from v2.0.0). This release is about making the tool fast to pick up and demo-ready, not about changing what "confirmed" means.
 

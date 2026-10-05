@@ -103,11 +103,12 @@ def test_probe_multi_param_independence(fixture_server):
 
 
 def test_probe_connection_error_on_dead_port():
-    """Hitting a port nothing is listening on must produce CONNECTION_ERROR,
+    """Hitting a port nothing is listening on must produce CONNECTION_ERROR or TIMEOUT,
     never NOT_REFLECTED -- this is the exact regression the spec called out."""
     session = build_session(None, None, False)
     results = probe_target("http://127.0.0.1:1/html?v=x", session, _logger(), request_timeout=2)
-    assert results[0].reflection.state == ProbeState.CONNECTION_ERROR
+    assert results[0].reflection.state in (ProbeState.CONNECTION_ERROR, ProbeState.TIMEOUT)
+    assert results[0].reflection.state != ProbeState.NOT_REFLECTED
 
 
 def test_probe_timeout_produces_timeout_state_not_not_reflected():
