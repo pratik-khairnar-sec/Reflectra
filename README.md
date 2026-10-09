@@ -10,7 +10,7 @@
 ```
 
 ### Context-Aware XSS Detection & Dynamic Browser Confirmation Framework
-**Native Headless Chrome Dialog Confirmation • Reflection Context Tagging • Zero False-Positive Philosophy**
+**Native Headless Chrome Dialog Confirmation • Reflection Context Tagging • Empirical Verification Philosophy**
 
 [![Version](https://img.shields.io/badge/version-v7.0.0-00ff66.svg?style=for-the-badge&logo=git&logoColor=white)](https://github.com/pratik-khairnar-sec/Reflectra/releases)
 [![Python Version](https://img.shields.io/badge/python-3.9%20%7C%203.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-3776AB.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
@@ -33,6 +33,7 @@
   <a href="https://pratik-khairnar-sec.medium.com/"><img src="https://img.shields.io/badge/Medium-Deep_Dive_Writeup-black.svg?style=for-the-badge&logo=medium" alt="Medium"></a>
   <a href="https://x.com/PratikSec/status/2108584870293451190"><img src="https://img.shields.io/badge/X-Official_Thread-000000.svg?style=for-the-badge&logo=x" alt="X Thread"></a>
   <a href="https://pratik-khairnar-sec.github.io/portfolio/"><img src="https://img.shields.io/badge/Live_Sandbox-Portfolio_Demo-38bdf8.svg?style=for-the-badge&logo=shield" alt="Portfolio Sandbox"></a>
+  <a href="https://discord.com/users/1531910259080167494"><img src="https://img.shields.io/badge/Discord-pratik.khairnar.sec-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Discord"></a>
 </p>
 
 <p align="center">
