@@ -37,7 +37,7 @@
 </p>
 
 <p align="center">
-  <img src="reflectra_dashboard.png" alt="Reflectra Executive HTML Report" width="850">
+  <img src="assets/screenshots/reflectra_dashboard.png" alt="Reflectra Executive HTML Report" width="850">
 </p>
 
 ---
@@ -83,9 +83,17 @@ Reflectra combines rapid HTTP reflection probing and intelligent context classif
 * **Interactive Hacker-Themed HTML Reports**: Beautiful dark terminal/CRT UI grouping findings by bug class with clickable PoCs and one-click payload copy buttons.
 * **Telegram Bot Integration**: Delivers scan summaries and attaches report files directly to your private channel or bot chat upon scan completion or `Ctrl+C`.
 
+<p align="center">
+  <img src="assets/screenshots/reflectra_context_matrix.jpg" alt="Reflectra Context-Aware XSS Breakout Syntax Matrix" width="850">
+</p>
+
 ---
 
 ## 🎯 Architecture & Detection Flow
+
+<p align="center">
+  <img src="assets/screenshots/reflectra_architecture_diagram.jpg" alt="Reflectra 5-Stage Architecture Blueprint" width="850">
+</p>
 
 ```mermaid
 flowchart TD
@@ -318,6 +326,10 @@ Interactive Mode:
 ---
 
 ## 📊 Reporting Experience
+
+<p align="center">
+  <img src="assets/screenshots/reflectra_terminal_dashboard.jpg" alt="Reflectra Live Terminal ANSI Feed & Interactive Glassmorphic Report" width="850">
+</p>
 
 ### 1. Live Terminal Feed
 Findings are streamed to stdout in real time as workers execute:
